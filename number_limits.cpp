@@ -2,7 +2,7 @@
 #include <string>
 #include <cfloat>
 #include <cstdio>
-#include <climits>
+#include <limits>
 using namespace std;
 
 template<typename T>
@@ -11,7 +11,7 @@ void printBitsInteger(T a) {
 	char bits[bit_count + 1];
 	bits[bit_count] = 0; // null terminiert \0
 	for (int i = 0; i < bit_count; i++) {
-		if (a & (0x1 << i))
+		if (a & (0x1 << i)) //testet ob das i-te Bit 1 ist (1 UND 1 = 1)
 			bits[bit_count - 1 - i] = '1';
 		else
 			bits[bit_count - 1 - i] = '0';
@@ -20,6 +20,7 @@ void printBitsInteger(T a) {
 }
 
 void printBitsFloat(float f) {
+	//interpetiert den von float f belegten Speicherbereich als Integer Wert
 	int *i = (int*) &f; //Adresse von float als int (beide 4 bytes)
 	printBitsInteger(*i); //Wert von float als int
 }
@@ -37,8 +38,8 @@ void printIntegerInfo(T a, bool vorzeichen, string name) {
 	//restliche Bytes
 	for (int i = 0; i < sizeof(a) - 1; i++) {
 		//mit 1 füllen
-		a = a << 8;
-		a = a ^ 0xff;
+		a = a << 8; //verschiebt alle Bits um 8 Positionen nach oben (höchste 8 bits verschwinden, tiefste 8 bits werden 0)
+		a = a ^ 0xff;  //setzt die tiefsten 8 Bit auf 1 (1 xor 0 = 1)
 	}
 	if (vorzeichen) {
 		cout << "Maximum:\t" << (long) a << endl;
@@ -46,7 +47,7 @@ void printIntegerInfo(T a, bool vorzeichen, string name) {
 		//minimum berechnen
 		a = 0x80; //erstes bit 1, andere 0
 		for (int i = 0; i < sizeof(a) - 1; i++) {
-			//mit 0 füllen
+			//verschiebt das gesetzte Bit nach ganz oben
 			a = a << 8;
 		}
 		cout << "Minimum:\t" << (long) a << endl;
@@ -73,7 +74,11 @@ int main() {
 				<< "char: 1\tshort: 2\tint: 3\tlong: 4\tunsigned char: 5\tunsigned short: 6\tunsigned int: 7\tunsigned long: 8\nfloat: 9\tdouble: 10\tlong double: 11\n";
 		cout << "Alle: 0\tEnde:-1\n\n";
 		cout << "\nAuswahl: ";
-		cin >> auswahl;
+		while (!(cin >> auswahl)) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "\nAuswahl: ";
+		}
 		bool all = false;
 		switch (auswahl) {
 		case 0:
@@ -127,7 +132,7 @@ int main() {
 				break;
 		}
 		case 9: {
-			float fmax = FLT_MAX;//ist gleich ((2^24)-1)*(2^104) keine Ahnung wieso.
+			float fmax = FLT_MAX; //ist gleich ((2^24)-1)*(2^104) keine Ahnung wieso.
 			float fmin = -FLT_MAX;
 			float fmin_gt0 = FLT_MIN;
 			printFloatingPointInfo(fmax, fmin, fmin_gt0, "float");
@@ -147,8 +152,7 @@ int main() {
 			long double ldmin = -LDBL_MAX;
 			long double ldmin_gt0 = LDBL_MIN;
 			printFloatingPointInfo(ldmax, ldmin, ldmin_gt0, "long double");
-			if (!all)
-				break;
+			break;
 		}
 		default:
 			auswahl = -1; //Abbruch
