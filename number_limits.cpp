@@ -3,7 +3,10 @@
 #include <cfloat>
 #include <cstdio>
 #include <limits>
+#include "number_limits.h"
+
 using namespace std;
+namespace number_limits {
 
 template<typename T>
 void printBitsInteger(T a) {
@@ -67,97 +70,110 @@ void printFloatingPointInfo(T max, T min, T min_gt0, string name) {
 	cout << endl;
 }
 
-int main() {
+int run() {
 	int auswahl;
 	do {
-		cout
-				<< "char: 1\tshort: 2\tint: 3\tlong: 4\tunsigned char: 5\tunsigned short: 6\tunsigned int: 7\tunsigned long: 8\nfloat: 9\tdouble: 10\tlong double: 11\n";
-		cout << "Alle: 0\tEnde:-1\n\n";
+		cout << "char: " << CHAR << "\tshort: " << SHORT << "\tint: " << INT
+				<< "\tlong: " << LONG << "\tunsigned char: " << UCHAR
+				<< "\tunsigned short: " << USHORT << "\tunsigned int: " << UINT
+				<< "\tunsigned long: " << ULONG << "\nfloat: " << FLOAT
+				<< "\tdouble: " << DOUBLE << "\tlong double: " << LDOUBLE
+				<< endl;
+		cout << "Alle: " << ALL << "\tEnde: " << ABORT << "\n\n";
 		cout << "\nAuswahl: ";
 		while (!(cin >> auswahl)) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "\nAuswahl: ";
+			cout << "\nAuswahl2: ";
 		}
-		bool all = false;
-		switch (auswahl) {
-		case 0:
-			all = true;
-		case 1: {
-			char c = 0;
-			printIntegerInfo(c, true, "char");
-			if (!all)
-				break;
-		}
-		case 2: {
-			short s = 0;
-			printIntegerInfo(s, true, "short");
-			if (!all)
-				break;
-		}
-		case 3: {
-			int i = 0;
-			printIntegerInfo(i, true, "int");
-			if (!all)
-				break;
-		}
-		case 4: {
-			long l = 0;
-			printIntegerInfo(l, true, "long");
-			if (!all)
-				break;
-		}
-		case 5: {
-			unsigned char c = 0;
-			printIntegerInfo(c, false, "char");
-			if (!all)
-				break;
-		}
-		case 6: {
-			unsigned short ss = 0;
-			printIntegerInfo(ss, false, "unsigned short");
-			if (!all)
-				break;
-		}
-		case 7: {
-			unsigned int si = 0;
-			printIntegerInfo(si, false, "unsigned int");
-			if (!all)
-				break;
-		}
-		case 8: {
-			unsigned long sl = 0;
-			printIntegerInfo(sl, false, "unsigned long");
-			if (!all)
-				break;
-		}
-		case 9: {
-			float fmax = FLT_MAX; //ist gleich ((2^24)-1)*(2^104) keine Ahnung wieso.
-			float fmin = -FLT_MAX;
-			float fmin_gt0 = FLT_MIN;
-			printFloatingPointInfo(fmax, fmin, fmin_gt0, "float");
-			if (!all)
-				break;
-		}
-		case 10: {
-			double dmax = DBL_MAX;
-			double dmin = -DBL_MAX;
-			double dmin_gt0 = DBL_MIN;
-			printFloatingPointInfo(dmax, dmin, dmin_gt0, "double");
-			if (!all)
-				break;
-		}
-		case 11: {
-			long double ldmax = LDBL_MAX;
-			long double ldmin = -LDBL_MAX;
-			long double ldmin_gt0 = LDBL_MIN;
-			printFloatingPointInfo(ldmax, ldmin, ldmin_gt0, "long double");
-			break;
-		}
-		default:
-			auswahl = -1; //Abbruch
-			break;
-		}
-	} while (auswahl >= 0);
+	} while (printLimit((number_limits::number_type) auswahl));
+	cout << "\nBeendet\n";
 	return 0;
 }
+
+bool printLimit(number_type auswahl) {
+	bool all = false;
+	switch (auswahl) {
+	case -1:
+		return false;
+	case 0:
+		all = true;
+	case CHAR: {
+		char c = 0;
+		printIntegerInfo(c, true, "char");
+		if (!all)
+			break;
+	}
+	case SHORT: {
+		short s = 0;
+		printIntegerInfo(s, true, "short");
+		if (!all)
+			break;
+	}
+	case INT: {
+		int i = 0;
+		printIntegerInfo(i, true, "int");
+		if (!all)
+			break;
+	}
+	case LONG: {
+		long l = 0;
+		printIntegerInfo(l, true, "long");
+		if (!all)
+			break;
+	}
+	case UCHAR: {
+		unsigned char c = 0;
+		printIntegerInfo(c, false, "char");
+		if (!all)
+			break;
+	}
+	case USHORT: {
+		unsigned short ss = 0;
+		printIntegerInfo(ss, false, "unsigned short");
+		if (!all)
+			break;
+	}
+	case UINT: {
+		unsigned int si = 0;
+		printIntegerInfo(si, false, "unsigned int");
+		if (!all)
+			break;
+	}
+	case ULONG: {
+		unsigned long sl = 0;
+		printIntegerInfo(sl, false, "unsigned long");
+		if (!all)
+			break;
+	}
+	case FLOAT: {
+		float fmax = FLT_MAX; //ist gleich ((2^24)-1)*(2^104) keine Ahnung wieso.
+		float fmin = -FLT_MAX;
+		float fmin_gt0 = FLT_MIN;
+		printFloatingPointInfo(fmax, fmin, fmin_gt0, "float");
+		if (!all)
+			break;
+	}
+	case DOUBLE: {
+		double dmax = DBL_MAX;
+		double dmin = -DBL_MAX;
+		double dmin_gt0 = DBL_MIN;
+		printFloatingPointInfo(dmax, dmin, dmin_gt0, "double");
+		if (!all)
+			break;
+	}
+	case LDOUBLE: {
+		long double ldmax = LDBL_MAX;
+		long double ldmin = -LDBL_MAX;
+		long double ldmin_gt0 = LDBL_MIN;
+		printFloatingPointInfo(ldmax, ldmin, ldmin_gt0, "long double");
+		break;
+	}
+	default:
+		return false; //Abbruch
+		break;
+	}
+	return true;
+}
+}
+
