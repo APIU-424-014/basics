@@ -1,4 +1,3 @@
-
 #ifndef NUMBER_LIMITS_H_
 #define NUMBER_LIMITS_H_
 
@@ -20,7 +19,8 @@ enum number_type {
 	LDOUBLE
 };
 int run();
-
+void printBitsChar(char a, bool steps); /*dummy Funktion, da generische Funktionen nicht über
+Header Dateien verfügbar gemacht werden können*/
 bool printLimit(number_type auswahl);
 
 }

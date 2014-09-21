@@ -9,23 +9,41 @@ using namespace std;
 namespace number_limits {
 
 template<typename T>
-void printBitsInteger(T a) {
+void printBitsInteger(T a, bool steps) {
 	int bit_count = sizeof(a) * 8;
 	char bits[bit_count + 1];
 	bits[bit_count] = 0; // null terminiert \0
 	for (int i = 0; i < bit_count; i++) {
-		if (a & (0x1 << i)) //testet ob das i-te Bit 1 ist (1 UND 1 = 1)
+		T theBit = 0x1 << i; //setzt das zu testende bit
+		T res = a & theBit; // Vergleich mit dem zu testenden Bit
+		bool cmp = res; //integer zu bool
+		if (steps) {
+			cout << "  ";
+			printBitsInteger<T>(a, false); //ausgeben der "Eingabe"
+			cout << endl << " &";
+			printBitsInteger<T>(theBit, false); //ausgeben des zu testenden Bits
+			cout << endl << " =";
+			printBitsInteger<T>(res, false); //ausgeben des Resultats
+			cout << " = " << ((cmp) ? "true " : "false") << " = "
+					<< ((cmp) ? 1 : 0) << endl << endl;
+		}
+		if (cmp)
 			bits[bit_count - 1 - i] = '1';
 		else
 			bits[bit_count - 1 - i] = '0';
 	}
+	if (steps)
+		cout << "  "; //einrücken
 	cout << bits;
 }
 
+void printBitsChar(char a, bool steps) { //dummy Funktion für char, ansonsten kein Aufruf von aussen möglich
+	printBitsInteger<char>(a, steps);
+}
 void printBitsFloat(float f) {
 	//interpetiert den von float f belegten Speicherbereich als Integer Wert
 	int *i = (int*) &f; //Adresse von float als int (beide 4 bytes)
-	printBitsInteger(*i); //Wert von float als int
+	printBitsInteger(*i, false); //Wert von float als int
 }
 
 template<typename T>
