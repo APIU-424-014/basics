@@ -1,18 +1,7 @@
-#include <iostream>
-#include <string>
-using namespace std;
+#include "number_limits.h"
 
-class Auto
-{
-public:
-  int geschwindigkeit;
-  double preis;
-  std::string farbe;
-};
-
-int main()
-{
-  Auto porsche;
-  porsche.geschwindigkeit = 200;
-  cout << "Der Ferrari erreicht " <<  porsche.geschwindigkeit << " Sachen" << std::endl;
+int main() {
+  number_limits::run();
+  char c = 77; //Bei Auswahl -1 eingeben um hier fort zu setzen
+  number_limits::printBitsChar(c, true);
 }
