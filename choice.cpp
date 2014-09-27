@@ -36,6 +36,7 @@ item::item(item *i) {
 	init(i->name, i->value);
 }
 item::~item() {
+	free(this->name);
 }
 choice::choice() {
 	// TODO Automatisch generierter Konstruktorstub
@@ -111,6 +112,12 @@ void choice::print() {
 	}
 }
 choice::~choice() {
+	for (int i = 0; i < this->listLength; i++) {
+		item *curList = *(this->list + i);
+		free(curList);
+	}
+	free(this->lengths);
+	free(this->list);
 }
 
 } /* namespace input */
