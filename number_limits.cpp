@@ -4,8 +4,13 @@
 #include <cstdio>
 #include <limits>
 #include "number_limits.h"
+#include "choice.h"
 
 using namespace std;
+
+//to use choice
+using namespace input;
+
 namespace number_limits {
 
 template<typename T>
@@ -89,22 +94,38 @@ void printFloatingPointInfo(T max, T min, T min_gt0, string name) {
 }
 
 int run() {
+	choice ch = choice();
+	item signedItems[] = { item(new string("char"), CHAR), item(
+			new string("short"), SHORT), item(new string("int"), INT), item(
+			new string("long"), LONG) };
+	int signedItemsLength = 4;
+	item unsignedItems[] = { item(new string("unsigned char"), UCHAR), item(
+			new string("unsigned short"), USHORT), item(
+			new string("unsigned int"), UINT), item(new string("unsigned long"),
+			ULONG) };
+	int unsignedItemsLength = 4;
+	item floatItems[] = { item(new string("float"), FLOAT), item(
+			new string("double"), DOUBLE), item(new string("long double"),
+			LDOUBLE) };
+	int floatItemsLength = 3;
+	item otherItems[] = { item(new string("Alle"), ALL), item(
+			new string("Ende"), ABORT) };
+	int otherItemsLength = 2;
+	ch.extend(&signedItems[0], signedItemsLength);
+	ch.extend(&unsignedItems[0], unsignedItemsLength);
+	ch.extend(&floatItems[0], floatItemsLength);
+	ch.extend(&otherItems[0], otherItemsLength);
 	int auswahl;
+	item *choosen;
 	do {
-		cout << "char: " << CHAR << "\tshort: " << SHORT << "\tint: " << INT
-				<< "\tlong: " << LONG << "\tunsigned char: " << UCHAR
-				<< "\tunsigned short: " << USHORT << "\tunsigned int: " << UINT
-				<< "\tunsigned long: " << ULONG << "\nfloat: " << FLOAT
-				<< "\tdouble: " << DOUBLE << "\tlong double: " << LDOUBLE
-				<< endl;
-		cout << "Alle: " << ALL << "\tEnde: " << ABORT << "\n\n";
-		cout << "\nAuswahl: ";
-		while (!(cin >> auswahl)) {
-			cin.clear();
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "\nAuswahl2: ";
+		auswahl = ch.getChoice();
+		choosen = ch.getItemByValue(auswahl);
+		if (choosen) {
+			cout << "== " << *choosen->name << " ==" << endl;
+		} else {
+			cout << "Auswahl nicht verfügbar. Bitte erneut versuchen." << endl;
 		}
-	} while (printLimit((number_limits::number_type) auswahl));
+	} while (printLimit((number_limits::number_type) auswahl) || !choosen); //!choosen is to redo if it's a null pointer
 	cout << "\nBeendet\n";
 	return 0;
 }
